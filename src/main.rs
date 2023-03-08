@@ -35,11 +35,10 @@ fn generate_coordinate(
     loop {
         x = rng.gen_range(-300.0..300.0); // Generate a random value in the range [-300.0, 300.0)
         let probability_x = gaussian_probability(x, mx, sigma_x); // Calculate the probability of the generated x-coordinate
-        let probability_threshold: f64 = rng.gen(); // Generate a random probability threshold
-                                                    // print!(
-                                                    //     "probability x:{:.2}\n probability thrs: {:.2}\n\n",
-                                                    //     probability_x, probability_threshold
-                                                    // );
+        let mut probability_threshold: f64 = rng.gen(); // Generate a random probability threshold
+        if probability_threshold < 0.001 {
+            probability_threshold = 0.0;
+        }
         if probability_x > probability_threshold {
             // If the threshold is less than the probability of the generated x-coordinate, accept the x-coordinate
             break;
@@ -50,11 +49,11 @@ fn generate_coordinate(
     loop {
         y = rng.gen_range(-300.0..300.0); // Generate a random value in the range [-300.0, 300.0)
         let probability_y = gaussian_probability(y, my, sigma_y); // Calculate the probability of the generated y-coordinate
-        let probability_threshold: f64 = rng.gen(); // Generate a random probability threshold
-                                                    // print!(
-                                                    //     "probability y:{:.2}\n probability thrs: {:.2}\n\n",
-                                                    //     probability_y, probability_threshold
-                                                    // );
+        let mut probability_threshold: f64 = rng.gen(); // Generate a random probability threshold
+                                                        // let probability_threshold = 0.0;
+        if probability_threshold < 0.001 {
+            probability_threshold = 0.0;
+        }
         if probability_y > probability_threshold {
             // If the threshold is less than the probability of the generated y-coordinate, accept the y-coordinate
             break;
@@ -142,6 +141,7 @@ fn draw_points(points: &Vec<Point>) -> Result<(), Box<dyn std::error::Error>> {
 
 fn main() -> io::Result<()> {
     let points = generate_points("points.txt")?;
+
     draw_points(&points);
 
     Ok(())
