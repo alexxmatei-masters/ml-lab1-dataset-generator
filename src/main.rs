@@ -63,6 +63,7 @@ fn generate_points(filename: &str) -> io::Result<()> {
 
     // Define the centers of the Gaussian distributions for each group
     let centers = vec![
+        /* mx, my, sigma_x, sigma_y */
         (0.0, 0.0, 50.0, 50.0),
         (-100.0, -100.0, 30.0, 60.0),
         (150.0, -150.0, 80.0, 20.0),
