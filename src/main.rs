@@ -57,7 +57,7 @@ fn generate_coordinate(
 // Generate 50,000 points (5 groups of 10,000 points each) with coordinates distributed according to normal distributions
 // with different means and standard deviations
 // The generated points are written to a file named "points.txt"
-fn generate_points(filename: &str) -> io::Result<()> {
+fn generate_points(filename: &str) -> io::Result<Vec<Point>> {
     // Open the file for writing
     let mut file = BufWriter::new(File::create(filename)?);
 
@@ -88,12 +88,16 @@ fn generate_points(filename: &str) -> io::Result<()> {
         }
     }
 
-    // Draw the points on the screen using a graphics library
-    // ...
-
-    Ok(())
+    Ok(points)
 }
 
 fn main() -> io::Result<()> {
-    generate_points("points.txt")
+    let points = generate_points("points.txt")?;
+
+    // TODO - Debug print
+    for point in &points {
+        println!("{:.2} {:.2} {}", point.x, point.y, point.group);
+    }
+
+    Ok(())
 }
