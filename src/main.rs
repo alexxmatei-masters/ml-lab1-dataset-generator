@@ -1,3 +1,4 @@
+use plotters::prelude::*;
 use rand::Rng;
 use std::fs::File;
 use std::io::{self, prelude::*, BufWriter};
@@ -54,7 +55,7 @@ fn generate_coordinate(
     Point { x, y, group } // Return the generated point
 }
 
-// Generate 50,000 points (5 groups of 10,000 points each) with coordinates distributed according to normal distributions
+// Generate 10,000 points with coordinates distributed according to normal distributions
 // with different means and standard deviations
 // The generated points are written to a file named "points.txt"
 fn generate_points(filename: &str) -> io::Result<Vec<Point>> {
@@ -73,7 +74,7 @@ fn generate_points(filename: &str) -> io::Result<Vec<Point>> {
 
     let mut points = Vec::new();
 
-    // For each group, generate 10,000 points using the generate_coordinate function
+    // For each group, generate 2000 points using the generate_coordinate function
     for (_i, (mx, my, sigma_x, sigma_y)) in centers.iter().enumerate() {
         for _ in 0..2000 {
             let mut rng = rand::thread_rng(); // Initialize the random number generator
@@ -91,13 +92,50 @@ fn generate_points(filename: &str) -> io::Result<Vec<Point>> {
     Ok(points)
 }
 
+fn draw_points(points: &Vec<Point>) -> Result<(), Box<dyn std::error::Error>> {
+    // Define the dimensions and layout of the plot
+    let root = BitMapBackend::new("plot.png", (800, 800)).into_drawing_area();
+    root.fill(&WHITE)?;
+
+    let x_min = -300.0;
+    let x_max = 300.0;
+    let y_min = -300.0;
+    let y_max = 300.0;
+
+    let mut chart = ChartBuilder::on(&root)
+        .x_label_area_size(40)
+        .y_label_area_size(40)
+        .margin(5)
+        .caption("Generated Points", ("sans-serif", 50.0))
+        .build_cartesian_2d(x_min..x_max, y_min..y_max)?;
+
+    // Add the points to the chart
+    for point in points {
+        let color = Palette99::pick(point.group as usize);
+        chart.draw_series(std::iter::once(Circle::new(
+            (point.x, point.y),
+            2,
+            color.filled(),
+        )))?;
+    }
+
+    // Set the legend and finalize the chart
+    chart
+        .configure_series_labels()
+        .background_style(&WHITE.mix(0.8))
+        .border_style(&BLACK)
+        .draw()?;
+    Ok(())
+}
+
 fn main() -> io::Result<()> {
     let points = generate_points("points.txt")?;
 
-    // TODO - Debug print
-    for point in &points {
-        println!("{:.2} {:.2} {}", point.x, point.y, point.group);
-    }
+    draw_points(&points);
+    // // TODO - Debug print
+    // for point in &points {
+    //     println!("{:.2} {:.2} {}", point.x, point.y, point.group);
+    // }
 
     Ok(())
 }
