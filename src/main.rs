@@ -40,7 +40,7 @@ fn generate_coordinate(
                                                     //     "probability x:{:.2}\n probability thrs: {:.2}\n\n",
                                                     //     probability_x, probability_threshold
                                                     // );
-        if probability_threshold < probability_x {
+        if probability_x > probability_threshold {
             // If the threshold is less than the probability of the generated x-coordinate, accept the x-coordinate
             break;
         }
@@ -55,7 +55,7 @@ fn generate_coordinate(
                                                     //     "probability y:{:.2}\n probability thrs: {:.2}\n\n",
                                                     //     probability_y, probability_threshold
                                                     // );
-        if probability_threshold < probability_y {
+        if probability_y > probability_threshold {
             // If the threshold is less than the probability of the generated y-coordinate, accept the y-coordinate
             break;
         }
