@@ -142,12 +142,7 @@ fn draw_points(points: &Vec<Point>) -> Result<(), Box<dyn std::error::Error>> {
 
 fn main() -> io::Result<()> {
     let points = generate_points("points.txt")?;
-
     draw_points(&points);
-    // // TODO - Debug print
-    // for point in &points {
-    //     println!("{:.2} {:.2} {}", point.x, point.y, point.group);
-    // }
 
     Ok(())
 }
