@@ -73,20 +73,21 @@ fn generate_points(filename: &str) -> io::Result<Vec<Point>> {
     ];
 
     let mut points = Vec::new();
+    for _ in 0..10000 {
+        let mut rng = rand::thread_rng(); // Initialize the random number generator
+        let random_group = rng.gen_range(0..=4);
+        let mx = centers[random_group].0;
+        let my = centers[random_group].1;
+        let sigma_x = centers[random_group].2;
+        let sigma_y = centers[random_group].3;
 
-    // For each group, generate 2000 points using the generate_coordinate function
-    for (_i, (mx, my, sigma_x, sigma_y)) in centers.iter().enumerate() {
-        for _ in 0..2000 {
-            let mut rng = rand::thread_rng(); // Initialize the random number generator
-            let random_group = rng.gen_range(0..=4);
-            let point = generate_coordinate(random_group as u32, *mx, *my, *sigma_x, *sigma_y);
+        let point = generate_coordinate(random_group as u32, mx, my, sigma_x, sigma_y);
 
-            // Write the point to the file in the format "x y group"
-            writeln!(file, "{:.2} {:.2} {}", point.x, point.y, point.group)?;
+        // Write the point to the file in the format "x y group"
+        writeln!(file, "{:.2} {:.2} {}", point.x, point.y, point.group)?;
 
-            // Add the point to the points vector
-            points.push(point);
-        }
+        // Add the point to the points vector
+        points.push(point);
     }
 
     Ok(points)
