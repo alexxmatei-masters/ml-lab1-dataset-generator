@@ -110,6 +110,8 @@ fn draw_points(points: &Vec<Point>) -> Result<(), Box<dyn std::error::Error>> {
         .caption("Generated Points", ("sans-serif", 50.0))
         .build_cartesian_2d(x_min..x_max, y_min..y_max)?;
 
+    chart.configure_mesh().axis_style(&BLACK).draw()?;
+
     // Add the points to the chart
     for point in points {
         let color = Palette99::pick(point.group as usize);
