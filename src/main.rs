@@ -40,10 +40,7 @@ fn generate_coordinate(
         if probability_threshold < noise_threshold {
             probability_threshold = 0.0;
         }
-        if probability_x == 0.0 {
-            probability_x = f64::MIN_POSITIVE
-        }
-        if probability_x > probability_threshold {
+        if probability_x >= probability_threshold {
             // If the threshold is less than the probability of the generated x-coordinate, accept the x-coordinate
             break;
         }
@@ -58,10 +55,7 @@ fn generate_coordinate(
         if probability_threshold < noise_threshold {
             probability_threshold = 0.0;
         }
-        if probability_y == 0.0 {
-            probability_y = f64::MIN_POSITIVE
-        }
-        if probability_y > probability_threshold {
+        if probability_y >= probability_threshold {
             // If the threshold is less than the probability of the generated y-coordinate, accept the y-coordinate
             break;
         }
