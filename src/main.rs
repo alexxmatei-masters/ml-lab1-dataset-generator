@@ -10,11 +10,12 @@ struct Point {
 }
 
 // Calculate the probability of a value x in a normal distribution
-// with center "center" and dispersion "dispersion"
-fn gaussian_probability(x: f64, center: f64, dispersion: f64) -> f64 {
-    let exponent = -((center - x).powi(2)) / (2.0 * dispersion.powi(2));
-    let denominator = (2.0 * std::f64::consts::PI * dispersion.powi(2)).sqrt();
-    exponent.exp() / denominator
+// with center "m" and dispersion "sigma"
+fn gaussian_probability(x: f64, m: f64, sigma: f64) -> f64 {
+    let numerator = (m - x).powf(2.0);
+    let denominator = 2.0 * sigma.powf(2.0);
+    let exponent = -numerator / denominator;
+    std::f64::consts::E.powf(exponent)
 }
 
 // Generate a single point with coordinates (x, y) belonging to the given group
@@ -35,6 +36,10 @@ fn generate_coordinate(
         x = rng.gen_range(-300.0..300.0); // Generate a random value in the range [-300.0, 300.0)
         let probability_x = gaussian_probability(x, mx, sigma_x); // Calculate the probability of the generated x-coordinate
         let probability_threshold: f64 = rng.gen(); // Generate a random probability threshold
+                                                    // print!(
+                                                    //     "probability x:{:.2}\n probability thrs: {:.2}\n\n",
+                                                    //     probability_x, probability_threshold
+                                                    // );
         if probability_threshold < probability_x {
             // If the threshold is less than the probability of the generated x-coordinate, accept the x-coordinate
             break;
@@ -46,6 +51,10 @@ fn generate_coordinate(
         y = rng.gen_range(-300.0..300.0); // Generate a random value in the range [-300.0, 300.0)
         let probability_y = gaussian_probability(y, my, sigma_y); // Calculate the probability of the generated y-coordinate
         let probability_threshold: f64 = rng.gen(); // Generate a random probability threshold
+                                                    // print!(
+                                                    //     "probability y:{:.2}\n probability thrs: {:.2}\n\n",
+                                                    //     probability_y, probability_threshold
+                                                    // );
         if probability_threshold < probability_y {
             // If the threshold is less than the probability of the generated y-coordinate, accept the y-coordinate
             break;
@@ -65,11 +74,11 @@ fn generate_points(filename: &str) -> io::Result<Vec<Point>> {
     // Define the centers of the Gaussian distributions for each group
     let centers = vec![
         /* mx, my, sigma_x, sigma_y */
-        (0.0, 0.0, 50.0, 50.0),
-        (-100.0, -100.0, 30.0, 60.0),
-        (150.0, -150.0, 80.0, 20.0),
-        (50.0, 100.0, 70.0, 70.0),
-        (-200.0, 200.0, 50.0, 70.0),
+        (0.0, 0.0, 10.0, 10.0),
+        (-100.0, -100.0, 10.0, 10.0),
+        (150.0, -150.0, 10.0, 10.0),
+        (50.0, 100.0, 10.0, 10.0),
+        (-200.0, 200.0, 10.0, 10.0),
     ];
 
     let mut points = Vec::new();
