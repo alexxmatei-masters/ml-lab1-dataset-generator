@@ -25,7 +25,8 @@ fn generate_coordinate(
     mx: f64,      // mean of the normal distribution for x-coordinate
     my: f64,      // mean of the normal distribution for y-coordinate
     sigma_x: f64, // standard deviation of the normal distribution for x-coordinate
-    sigma_y: f64, // standard deviation of the normal distribution for y-coordinate
+    sigma_y: f64, // standard deviation of the normal distribution for y-coordinat
+    noise_threshold: f64,
 ) -> Point {
     let mut rng = rand::thread_rng(); // Initialize the random number generator
     let mut x;
@@ -36,7 +37,7 @@ fn generate_coordinate(
         x = rng.gen_range(-300.0..300.0); // Generate a random value in the range [-300.0, 300.0)
         let probability_x = gaussian_probability(x, mx, sigma_x); // Calculate the probability of the generated x-coordinate
         let mut probability_threshold: f64 = rng.gen(); // Generate a random probability threshold
-        if probability_threshold < 0.001 {
+        if probability_threshold < noise_threshold {
             probability_threshold = 0.0;
         }
         if probability_x > probability_threshold {
@@ -51,7 +52,7 @@ fn generate_coordinate(
         let probability_y = gaussian_probability(y, my, sigma_y); // Calculate the probability of the generated y-coordinate
         let mut probability_threshold: f64 = rng.gen(); // Generate a random probability threshold
                                                         // let probability_threshold = 0.0;
-        if probability_threshold < 0.001 {
+        if probability_threshold < noise_threshold {
             probability_threshold = 0.0;
         }
         if probability_y > probability_threshold {
@@ -88,8 +89,16 @@ fn generate_points(filename: &str) -> io::Result<Vec<Point>> {
         let my = centers[random_group].1;
         let sigma_x = centers[random_group].2;
         let sigma_y = centers[random_group].3;
+        let noise_threshold = 0.001;
 
-        let point = generate_coordinate(random_group as u32, mx, my, sigma_x, sigma_y);
+        let point = generate_coordinate(
+            random_group as u32,
+            mx,
+            my,
+            sigma_x,
+            sigma_y,
+            noise_threshold,
+        );
 
         // Write the point to the file in the format "x y group"
         writeln!(file, "{:.2} {:.2} {}", point.x, point.y, point.group)?;
